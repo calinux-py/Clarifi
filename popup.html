@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #333333;
+      --border-color: #e0e0e0;
+      --hover-color: #f5f5f5;
+      --primary-color: #2563eb;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #1a1a1a;
+      --text-color: #ffffff;
+      --border-color: #404040;
+      --hover-color: #2a2a2a;
+      --primary-color: #3b82f6;
+    }
+
+    body {
+      width: 380px;
+      min-height: 400px;
+      margin: 0;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .settings-icon {
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      fill: var(--text-color);
+    }
+
+    .settings-panel {
+      display: none;
+      padding: 16px;
+      background-color: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .settings-panel.active {
+      display: block;
+    }
+
+    .api-input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 24px;
+      margin-left: 8px;
+    }
+
+    .toggle input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary-color);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+
+    .entries-container {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .entry {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background-color: var(--hover-color);
+      cursor: pointer;
+    }
+
+    .entry-title {
+	  font-size: 13px;
+      font-weight: 500;
+    }
+
+    .entry-timestamp {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .entry-content {
+      padding: 12px;
+      display: none;
+	  font-size: 13px;
+    }
+
+    .entry.expanded .entry-content {
+      display: block;
+    }
+
+    .expand-icon {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .entry.expanded .expand-icon {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 class="title">Clarifi</h1>
+    <svg class="settings-icon" viewBox="0 0 24 24">
+      <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.65.07-.97 0-.32-.03-.65-.07-.97l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.63c-.04.32-.07.65-.07.97 0 .32.03.65.07.97l-2.11 1.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.63z"/>
+    </svg>
+  </div>
+
+  <div class="settings-panel">
+    <div>
+      <label for="api-key">OpenAI API Key</label>
+      <input type="password" id="api-key" class="api-input" placeholder="Enter your API key">
+    </div>
+    <div class="toggle-container">
+      <label for="dark-mode">Dark Mode</label>
+      <label class="toggle">
+        <input type="checkbox" id="dark-mode">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="entries-container" id="entries">
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

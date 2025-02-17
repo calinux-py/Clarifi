@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Clarifi",
+  "version": "1.0",
+  "description": "Summarize selected text using ChatGPT",
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "notifications"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
