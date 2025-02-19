@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <title>Clarifi</title>
   <style>
     :root {
       --bg-color: #ffffff;
@@ -9,7 +11,6 @@
       --hover-color: #f5f5f5;
       --primary-color: #2563eb;
     }
-
     [data-theme="dark"] {
       --bg-color: #1a1a1a;
       --text-color: #ffffff;
@@ -17,7 +18,24 @@
       --hover-color: #2a2a2a;
       --primary-color: #3b82f6;
     }
-
+    
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-color) var(--hover-color);
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--hover-color);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--primary-color);
+      border-radius: 4px;
+    }
+    
     body {
       width: 380px;
       min-height: 400px;
@@ -28,27 +46,23 @@
       color: var(--text-color);
       transition: all 0.3s ease;
     }
-
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
-
     .title {
       font-size: 24px;
       font-weight: 600;
       color: var(--primary-color);
     }
-
     .settings-icon {
       cursor: pointer;
       width: 24px;
       height: 24px;
       fill: var(--text-color);
     }
-
     .settings-panel {
       display: none;
       padding: 16px;
@@ -57,11 +71,9 @@
       border-radius: 8px;
       margin-bottom: 20px;
     }
-
     .settings-panel.active {
       display: block;
     }
-
     .api-input {
       width: 100%;
       padding: 8px;
@@ -71,24 +83,20 @@
       background-color: var(--bg-color);
       color: var(--text-color);
     }
-
     .toggle-container {
       display: flex;
       align-items: center;
       margin-top: 12px;
     }
-
     .toggle {
       position: relative;
       width: 48px;
       height: 24px;
       margin-left: 8px;
     }
-
     .toggle input {
       display: none;
     }
-
     .slider {
       position: absolute;
       cursor: pointer;
@@ -97,10 +105,9 @@
       right: 0;
       bottom: 0;
       background-color: #ccc;
-      transition: .4s;
+      transition: 0.4s;
       border-radius: 24px;
     }
-
     .slider:before {
       position: absolute;
       content: "";
@@ -109,30 +116,30 @@
       left: 2px;
       bottom: 2px;
       background-color: white;
-      transition: .4s;
+      transition: 0.4s;
       border-radius: 50%;
     }
-
     input:checked + .slider {
       background-color: var(--primary-color);
     }
-
     input:checked + .slider:before {
       transform: translateX(24px);
     }
-
     .entries-container {
       max-height: 500px;
       overflow-y: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-
+    .entries-container::-webkit-scrollbar {
+      display: none;
+    }
     .entry {
       border: 1px solid var(--border-color);
       border-radius: 8px;
       margin-bottom: 12px;
       overflow: hidden;
     }
-
     .entry-header {
       display: flex;
       justify-content: space-between;
@@ -141,35 +148,32 @@
       background-color: var(--hover-color);
       cursor: pointer;
     }
-
     .entry-title {
-	  font-size: 13px;
+      font-size: 13px;
       font-weight: 500;
     }
-
     .entry-timestamp {
       font-size: 12px;
       color: #666;
     }
-
     .entry-content {
       padding: 12px;
       display: none;
-	  font-size: 13px;
+      font-size: 13px;
     }
-
     .entry.expanded .entry-content {
       display: block;
     }
-
     .expand-icon {
       width: 16px;
       height: 16px;
       transition: transform 0.3s ease;
     }
-
     .entry.expanded .expand-icon {
       transform: rotate(180deg);
+    }
+    .delete-icon {
+      cursor: pointer;
     }
   </style>
 </head>
@@ -184,19 +188,18 @@
   <div class="settings-panel">
     <div>
       <label for="api-key">OpenAI API Key</label>
-      <input type="password" id="api-key" class="api-input" placeholder="Enter your API key">
+      <input type="password" id="api-key" class="api-input" placeholder="Enter your API key" />
     </div>
     <div class="toggle-container">
       <label for="dark-mode">Dark Mode</label>
       <label class="toggle">
-        <input type="checkbox" id="dark-mode">
+        <input type="checkbox" id="dark-mode" />
         <span class="slider"></span>
       </label>
     </div>
   </div>
 
-  <div class="entries-container" id="entries">
-  </div>
+  <div class="entries-container" id="entries"></div>
 
   <script src="popup.js"></script>
 </body>
