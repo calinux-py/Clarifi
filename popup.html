@@ -24,28 +24,35 @@
       scrollbar-color: var(--primary-color) var(--hover-color);
     }
     ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 2px;
+      height: 2px;
     }
     ::-webkit-scrollbar-track {
       background: var(--hover-color);
-      border-radius: 4px;
+      border-radius: 2px;
     }
     ::-webkit-scrollbar-thumb {
       background-color: var(--primary-color);
-      border-radius: 4px;
+      border-radius: 2px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 380px;
+      height: 600px;
+      overflow: hidden;
     }
     
     body {
-      width: 380px;
-      min-height: 400px;
-      margin: 0;
-      padding: 16px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
       transition: all 0.3s ease;
+      padding: 16px;
+      box-sizing: border-box;
     }
+
     .header {
       display: flex;
       justify-content: space-between;
@@ -125,15 +132,12 @@
     input:checked + .slider:before {
       transform: translateX(24px);
     }
+
     .entries-container {
       max-height: 500px;
       overflow-y: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
     }
-    .entries-container::-webkit-scrollbar {
-      display: none;
-    }
+
     .entry {
       border: 1px solid var(--border-color);
       border-radius: 8px;
@@ -199,7 +203,8 @@
     </div>
   </div>
 
-  <div class="entries-container" id="entries"></div>
+  <div class="entries-container" id="entries">
+  </div>
 
   <script src="popup.js"></script>
 </body>
