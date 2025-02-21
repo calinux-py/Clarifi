@@ -9,7 +9,8 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info) => {
   if (info.menuItemId !== 'summarizeText') return;
 
-  const selectedText = info.selectionText;
+  let selectedText = info.selectionText;
+
   chrome.storage.sync.get('apiKey', async (data) => {
     if (!data.apiKey) {
       return handleMissingApiKey();
@@ -18,7 +19,11 @@ chrome.contextMenus.onClicked.addListener((info) => {
     try {
       const summary = await fetchSummary(data.apiKey, selectedText);
       const cleanedSummary = trimCodeBlocks(summary);
+      
       const newEntry = createEntry(selectedText, cleanedSummary);
+
+      selectedText = null;
+
       addEntry(newEntry);
     } catch (error) {
       console.error('Summarization error:', error);
@@ -80,7 +85,7 @@ function trimCodeBlocks(text) {
 }
 
 function createEntry(originalText, summary) {
-  const MAX_LENGTH = 2700;
+  const MAX_LENGTH = 4000;
   const truncate = (str) =>
     str.length > MAX_LENGTH ? str.substring(0, MAX_LENGTH) + '...' : str;
 
@@ -89,7 +94,6 @@ function createEntry(originalText, summary) {
     timestamp: new Date().toISOString(),
     title: truncate(originalText.substring(0, 30) + '...'),
     summary: truncate(summary),
-    originalText: truncate(originalText),
   };
 }
 
@@ -108,6 +112,10 @@ function addEntry(newEntry) {
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace === 'sync' && changes.entries) {
-    updateBadge('!', '#ADD8E6');
+    const oldEntries = changes.entries.oldValue || [];
+    const newEntries = changes.entries.newValue || [];
+    if (newEntries.length > oldEntries.length) {
+      updateBadge('!', '#ADD8E6');
+    }
   }
 });
